@@ -24,6 +24,8 @@ Generate checksum of resource:
 
 ```
 ./bin/createHash ./resources/Library-FHIRCommon.json
+
+892c98e8660c3b84f88cffc4759880ea6f73afa9f58a5ee5dd2f8b7c48250dca
 ```
 
 Generate FHIR Signature for the resource:
