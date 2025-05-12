@@ -6,6 +6,8 @@ const path = require('path')
 
 
 async function generateKey() {
+  fs.mkdirSync(path.join(__dirname, "..", "keys"), { recursive: true })
+  
   const { privateKey } = await jose.generateKeyPair('RS384', { extractable: true, use: ['sig'], algorithm: 'RS384' })
   fs.writeFileSync(path.join(__dirname, "..", "keys", "private-rs384.json"), JSON.stringify(await jose.exportJWK(privateKey)))  
   
