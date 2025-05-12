@@ -11,7 +11,7 @@ const loadKeys = (): JWKS => {
       'utf8'
     )
   )
-  return{
+  return {
     keys: [
       {
         ...key,
@@ -19,7 +19,7 @@ const loadKeys = (): JWKS => {
         use: 'sig',
         alg: 'RS384',
       },
-    ]
+    ],
   }
 }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
-const path = require('path') 
+const path = require('path')
 const sha256 = require('sha256')
 
 // Utility function to read and parse a JSON file

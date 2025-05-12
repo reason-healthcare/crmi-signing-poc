@@ -13,11 +13,15 @@ const readJsonFile = (filePath) => {
 
 // Utility function to load the private key
 const loadPrivateKey = async () => {
-  const privateKeyPath = path.join(__dirname, '..', 'keys', 'private-rs384.json')
+  const privateKeyPath = path.join(
+    __dirname,
+    '..',
+    'keys',
+    'private-rs384.json'
+  )
   const privateKeyData = readJsonFile(privateKeyPath)
   return jose.importJWK(privateKeyData, 'RS384')
 }
-
 
 // Function to sign the hash with the private key
 const signHash = async (hash, privateKey) => {
