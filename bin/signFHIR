@@ -1,0 +1,103 @@
+#!/usr/bin/env node
+
+const jose = require('jose')
+const fs = require('fs')
+const path = require('path')
+const sha256 = require('sha256')
+
+// Utility function to read and parse a JSON file
+const readJsonFile = (filePath) => {
+  const fileContent = fs.readFileSync(filePath, 'utf8')
+  return JSON.parse(fileContent)
+}
+
+// Utility function to load the private key
+const loadPrivateKey = async () => {
+  const privateKeyPath = path.join(__dirname, '..', 'keys', 'private-rs384.json')
+  const privateKeyData = readJsonFile(privateKeyPath)
+  return jose.importJWK(privateKeyData, 'RS384')
+}
+
+
+// Function to sign the hash with the private key
+const signHash = async (hash, privateKey) => {
+  const iss = 'https://localhost:3000/oidc'
+  const payload = JSON.stringify({ iss, hash })
+
+  return new jose.CompactSign(new TextEncoder().encode(payload))
+    .setProtectedHeader({ alg: 'RS384' })
+    .sign(privateKey)
+}
+
+// Function to add the signature to the FHIR resource
+const addSignatureToResource = (resource, signature) => {
+  const valueSignature = {
+    resourceType: 'Signature',
+    type: 'ProofOfCreation',
+    sigFormat: 'application/jwt',
+    when: new Date().toISOString(),
+    data: signature,
+  }
+
+  resource.meta ||= {}
+  resource.meta.extension ||= []
+
+  resource.meta.extension.push({
+    url: 'http://hl7.org/fhir/uv/crmi/fhir/StructureDefinition/artifact-signature',
+    valueSignature: valueSignature,
+  })
+
+  return resource
+}
+
+// Function to create a hash of the FHIR resource
+// If the resource encoding is not JSON, the processing semantics are to
+// convert the resource to minimifed JSON first.
+const createResourceHash = (resourceOrPath) => {
+  // Parse the input as a file path or a resource object
+  if (typeof resourceOrPath === 'string') {
+    const filePath = path.resolve(resourceOrPath)
+    resource = readJsonFile(filePath)
+  } else if (resourceOrPath.resourceType) {
+    resource = resourceOrPath
+  } else {
+    throw new Error('Invalid FHIR resource: no resourceType found')
+  }
+
+  const { meta, text, id, ...resourceToEncode } = resource
+  const stringToHash = JSON.stringify(resourceToEncode)
+  return sha256(stringToHash)
+}
+
+// Main function to sign a FHIR resource
+const signFhirResource = async (resourceOrPath) => {
+  let resource
+
+  // Parse the input as a file path or a resource object
+  if (typeof resourceOrPath === 'string') {
+    const filePath = path.resolve(resourceOrPath)
+    resource = readJsonFile(filePath)
+  } else if (resourceOrPath.resourceType) {
+    resource = resourceOrPath
+  } else {
+    throw new Error('Invalid FHIR resource: no resourceType found')
+  }
+
+  // 1. Load the private key
+  const privateKey = await loadPrivateKey()
+
+  // 2. Create a hash of the resource
+  const hash = createResourceHash(resource)
+
+  // 3. Sign the hash
+  const signature = await signHash(hash, privateKey)
+
+  // 4. Add the signature to the resource
+  const signedResource = addSignatureToResource(resource, signature)
+
+  // 5. Output the truncated signed resource for demonstration
+  console.log(JSON.stringify(signedResource.meta, null, 2))
+}
+
+// Execute the script with the provided argument
+signFhirResource(process.argv[2])

@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const jose = require('jose')
+const fs = require('fs')
+const path = require('path')
+
+
+async function generateKey() {
+  const { privateKey } = await jose.generateKeyPair('RS384', { extractable: true, use: ['sig'], algorithm: 'RS384' })
+  fs.writeFileSync(path.join(__dirname, "..", "keys", "private-rs384.json"), JSON.stringify(await jose.exportJWK(privateKey)))  
+  
+  console.log(await jose.exportJWK(privateKey))
+}
+
+generateKey()
