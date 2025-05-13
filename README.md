@@ -42,7 +42,6 @@ Generate FHIR Signature for the resource:
     {
       "url": "http://hl7.org/fhir/uv/crmi/fhir/StructureDefinition/artifact-signature",
       "valueSignature": {
-        "resourceType": "Signature",
         "type": "ProofOfCreation",
         "sigFormat": "application/jwt",
         "when": "2025-05-12T10:17:55.135Z",
