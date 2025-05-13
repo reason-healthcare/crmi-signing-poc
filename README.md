@@ -40,7 +40,7 @@ Generate FHIR Signature for the resource:
   ],
   "extension": [
     {
-      "url": "http://hl7.org/fhir/uv/crmi/fhir/StructureDefinition/artifact-signature",
+      "url": "http://hl7.org/fhir/StructureDefinition/artifact-signature",
       "valueSignature": {
         "type": "ProofOfCreation",
         "who": {
