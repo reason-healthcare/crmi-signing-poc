@@ -43,6 +43,9 @@ Generate FHIR Signature for the resource:
       "url": "http://hl7.org/fhir/uv/crmi/fhir/StructureDefinition/artifact-signature",
       "valueSignature": {
         "type": "ProofOfCreation",
+        "who": {
+          "display": "..."
+        },
         "sigFormat": "application/jwt",
         "when": "2025-05-12T10:17:55.135Z",
         "data": "eyJhbGciOiJSUzM4NCJ9.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDozMDAwL29pZGMiLCJoYXNoIjoiODkyYzk4ZTg2NjBjM2I4NGY4OGNmZmM0NzU5ODgwZWE2ZjczYWZhOWY1OGE1ZWU1ZGQyZjhiN2M0ODI1MGRjYSJ9.T581_ZkQee7RnJpePnApDIgWtHCO6GUFltHF3riM0wEEAMuVK8X63OrBZpRMCFZWwJ9_RQk3Jo9q4Tyu5WxnZaFxyH0cDCs21gFuCtUanRf4jep2ZfShjVjmm90AGyAzz6EeTodpWyNL48Js__ZSmK8HahkFos5DWZdi93BZalOPvR-pAnzKgxyrrkdmLFZBjKC6drzqhfTyTY0P2yLZV0x6X3btvkdcci8_tqKDl8xz84Gut4iHr0fivP7CbzBoIO6Dlw1gScFWaE9ATRDvkTnSYu3JVptMZo4xgKhrL3ZQktrQZm1CIQ8tnMn5hCdT7W-DysejxxH9t128FYBA1Q"
